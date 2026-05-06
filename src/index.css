@@ -1,0 +1,232 @@
+/* ============================================================
+   全局樣式設定 - 青島大海 + 紅磚主題
+   ============================================================ */
+
+/* 載入 Tailwind（這個專案用 Tailwind 作為基礎，部分元件用 inline style）*/
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Leaflet 地圖樣式 */
+@import "leaflet/dist/leaflet.css";
+
+/* ============================================================
+   CSS 自訂變數（主題顏色）
+   ============================================================ */
+:root {
+  /* 主色：青島海洋藍 */
+  --primary: 202 75% 42%;
+  --primary-foreground: 0 0% 100%;
+
+  /* 強調色：紅磚 */
+  --accent: 19 54% 47%;
+  --accent-foreground: 0 0% 100%;
+
+  /* 背景 */
+  --background: 207 50% 97%;
+  --foreground: 205 50% 19%;
+
+  /* 卡片 */
+  --card: 0 0% 100%;
+  --card-foreground: 205 50% 19%;
+  --card-border: 207 40% 88%;
+
+  /* 邊框 */
+  --border: 207 40% 88%;
+  --input: 207 40% 88%;
+
+  /* 靜音色 */
+  --muted: 207 30% 93%;
+  --muted-foreground: 207 30% 55%;
+
+  /* 彈窗 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 205 50% 19%;
+  --popover-border: 207 40% 88%;
+
+  /* 側欄 */
+  --sidebar: 207 45% 94%;
+  --sidebar-foreground: 205 50% 19%;
+  --sidebar-border: 207 40% 88%;
+  --sidebar-primary: 202 75% 42%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 207 45% 90%;
+  --sidebar-accent-foreground: 205 50% 19%;
+  --sidebar-ring: 202 75% 42%;
+
+  /* 破壞性操作 */
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* 次要色 */
+  --secondary: 207 40% 92%;
+  --secondary-foreground: 205 40% 30%;
+
+  /* 系統變數 */
+  --ring: 202 75% 42%;
+  --radius: 0.625rem;
+
+  /* 圖表色（每日顏色） */
+  --chart-1: 4 80% 58%;   /* 紅 */
+  --chart-2: 207 68% 47%; /* 藍 */
+  --chart-3: 145 60% 43%; /* 綠 */
+  --chart-4: 38 85% 52%;  /* 橙 */
+  --chart-5: 280 50% 50%; /* 紫 */
+
+  /* 字型（中英分離：SeparateSerif 映射英文至 Times New Roman，中文走 Noto Serif SC） */
+  --app-font-sans: 'SeparateSerif', "Noto Serif SC", "SimSun", "宋体", serif;
+  --app-font-serif: "Noto Serif SC", "SimSun", "宋体", serif;
+  --app-font-mono: Menlo, monospace;
+
+  /* 陰影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow: 0 2px 8px rgba(46, 134, 171, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(46, 134, 171, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  /* Replit 系統需要的 border 相關變數 */
+  --button-outline: rgba(0,0,0,0.10);
+  --badge-outline: rgba(0,0,0,0.05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0,0.03);
+  --elevate-2: rgba(0,0,0,0.08);
+
+  /* 自動計算邊框 */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+
+  --spacing: 0.25rem;
+  --tracking-normal: 0em;
+}
+
+/* ============================================================
+   @theme inline（Tailwind v4 需要）
+   ============================================================ */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ============================================================
+   基礎重設
+   ============================================================ */
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: 'SeparateSerif', "Noto Serif SC", "SimSun", "宋体", serif;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'SeparateSerif', "Noto Serif SC", "SimSun", "宋体", serif;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: 'SeparateSerif', "Noto Serif SC", "SimSun", "宋体", serif;
+  }
+
+  :is(h1,h2,h3,h4,h5,h6,p,div,span,button,input,textarea,select) {
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c8e1ef;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4a90b5;
+  }
+}
+
+/* ============================================================
+   Leaflet 地圖彈窗樣式覆蓋
+   ============================================================ */
+.leaflet-popup-content-wrapper {
+  border-radius: 10px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+}
+
+/* ============================================================
+   工具類
+   ============================================================ */
+@layer utilities {
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+}
