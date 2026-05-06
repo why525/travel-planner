@@ -15,14 +15,16 @@ let amapPromise: Promise<unknown> | null = null
 
 export function getAMap(): Promise<unknown> {
   if (!amapPromise) {
-    const secCode = import.meta.env.VITE_AMAP_SECURITY_CODE
-    // 只有在明確提供安全密鑰時才設定，避免空字串干擾舊版 Key 授權
-    if (secCode) {
-      // 本地開發：直接使用安全密鑰（local-cors-proxy 不支援 serviceHost 模式）
-      // 線上部署：serviceHost 指向同源代理，安全密鑰由 Vercel 環境變數提供，不暴露於客戶端
-      ;(window as Record<string, unknown>)._AMapSecurityConfig = import.meta.env.DEV
-        ? { securityJsCode: secCode }
-        : { serviceHost: '' }
+    if (import.meta.env.DEV) {
+      // 本地開發：直接帶入安全密鑰（local-cors-proxy 不支援 serviceHost 模式）
+      const secCode = import.meta.env.VITE_AMAP_SECURITY_CODE
+      if (secCode) {
+        ;(window as Record<string, unknown>)._AMapSecurityConfig = { securityJsCode: secCode }
+      }
+    } else {
+      // 線上部署：永遠設定 serviceHost，讓 SDK 向 /_AMapSecurityConfig 取得安全密鑰
+      // Vercel rewrites 將該路徑代理到 /api/amap-proxy，密鑰由伺服器端 AMAP_SECURITY_CODE 回傳
+      ;(window as Record<string, unknown>)._AMapSecurityConfig = { serviceHost: '' }
     }
 
     amapPromise = AMapLoader.load({
