@@ -8,6 +8,7 @@ import { useTravelStore } from '../store/useTravelStore'
 import { THEME, getCategoryColor } from '../theme'
 import { Attraction, ItemCategory } from '../types'
 import gcoord from 'gcoord'
+import { AMAP_PROXY_BASE } from '../lib/amapLoader'
 
 // ── POI 候選型別 ──────────────────────────────────────────────
 interface PoiCandidate {
@@ -17,8 +18,9 @@ interface PoiCandidate {
   lng: number          // GCJ-02 經度
 }
 
-// 高德 Web Service Key（填入你的 Key，或由代理注入）
-const AMAP_KEY = 'c5cc58440d3081d87eec659c742fb908'
+// 本地開發時直接帶 Key（local-cors-proxy 純轉發）；
+// 線上部署時不帶 Key，由 Vercel Serverless Function 從環境變數注入
+const AMAP_DEV_KEY = 'c5cc58440d3081d87eec659c742fb908'
 
 interface AmapTip {
   name: string
@@ -31,11 +33,20 @@ interface AmapTipsResponse {
   tips: AmapTip[]
 }
 
-// 呼叫高德 POI 聯想接口（inputtips），透過本地 CORS 代理避免跨域
+// 呼叫高德 POI 聯想接口（inputtips），透過代理避免跨域
 async function fetchPoiCandidates(query: string, cityHint?: string): Promise<PoiCandidate[]> {
-  const params = new URLSearchParams({ keywords: query, key: AMAP_KEY, output: 'json' })
-  if (cityHint) params.set('city', cityHint)
-  const url = `http://localhost:8010/proxy/v3/assistant/inputtips?${params}`
+  let url: string
+  if (import.meta.env.DEV) {
+    // 本地：local-cors-proxy 純轉發，需自帶 Key
+    const params = new URLSearchParams({ keywords: query, key: AMAP_DEV_KEY, output: 'json' })
+    if (cityHint) params.set('city', cityHint)
+    url = `${AMAP_PROXY_BASE}/v3/assistant/inputtips?${params}`
+  } else {
+    // 線上：Vercel Serverless Function 注入 Key，path 參數指定高德端點
+    const params = new URLSearchParams({ path: '/v3/assistant/inputtips', keywords: query, output: 'json' })
+    if (cityHint) params.set('city', cityHint)
+    url = `${AMAP_PROXY_BASE}?${params}`
+  }
   try {
     const res = await fetch(url)
     if (!res.ok) return []

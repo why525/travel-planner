@@ -46,7 +46,7 @@ export default async function handler(req, res) {
   const targetUrl = new URL(`https://restapi.amap.com${apiPath}`)
   targetUrl.searchParams.set('key', amapKey)
   for (const [k, v] of parsed.searchParams) {
-    if (k !== 'path') targetUrl.searchParams.set(k, v)
+    if (k !== 'path' && k !== 'key') targetUrl.searchParams.set(k, v)
   }
 
   try {
