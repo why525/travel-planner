@@ -69,7 +69,7 @@ export default function DayColumn({ day, onEditItem }: DayColumnProps) {
   }
 
   return (
-    <div style={{
+    <div className="day-column-card" style={{
       width: 'calc(33.33% - 11px)', minWidth: '240px', flexShrink: 0,
       display: 'flex', flexDirection: 'column',
       background: 'rgba(255,255,255,0.84)',

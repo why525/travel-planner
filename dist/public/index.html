@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>萬用旅行規劃</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Noto Serif SC：中文宋體，跨平台支援 Windows / Mac / iOS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/assets/index-D4kunjTF.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DGoypURY.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- ========== 最終完美版｜中英嚴格分開字體+右上角按鈕+標題去重+匯出匯入 ========== -->
+    <script>
+    // 1. 標題去重：只保留手動輸入的內容，改進 regex 使其支援中文（\b 對中文無效）
+    document.title = document.title
+      .replace(/(\S+)(\s+\1)+/g, '$1')
+      .trim();
+
+    // 2. 中英分離字體：@font-face + unicode-range 精準分流法
+    //    SeparateSerif 只覆蓋 ASCII 範圍，映射至本機 Times New Roman
+    //    中文字元 fallthrough 至 Noto Serif SC（已從 Google Fonts 載入）→ SimSun/宋體
+    const fontStyle = document.createElement('style');
+    fontStyle.textContent = `
+      @font-face {
+        font-family: 'SeparateSerif';
+        src: local('Times New Roman'), local('TimesNewRoman');
+        unicode-range: U+0020-007E; /* 英文、數字、ASCII 標點 */
+      }
+      html, body, * {
+        font-family: 'SeparateSerif', "Noto Serif SC", "SimSun", "宋体", serif !important;
+      }
+    `;
+    document.head.appendChild(fontStyle);
+
+    // 3. 數據讀寫（固定 key，不用啟發式搜尋）
+    const STORAGE_KEY = 'travel-planner-data';
+
+    function exportCurrentData() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (!data) { alert('暫無數據可匯出'); return; }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(data)
+          .then(() => alert('✅ 數據已複製到剪貼板！'))
+          .catch(() => showCopyDialog(data));
+      } else {
+        showCopyDialog(data);
+      }
+    }
+
+    function showCopyDialog(text) {
+      const overlay = makeOverlay();
+      const box = makeBox();
+      box.appendChild(makeTitle('複製下方數據，貼至安全位置保存'));
+      const ta = makeTextarea(text, true);
+      ta.onclick = () => ta.select();
+      const btnRow = makeRow();
+      const closeBtn = makeBtn('關閉', '#eef5f9', '#2c5282');
+      closeBtn.onclick = () => document.body.removeChild(overlay);
+      btnRow.appendChild(closeBtn);
+      box.appendChild(ta);
+      box.appendChild(btnRow);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      ta.select();
+    }
+
+    function importToCurrentDevice() {
+      const overlay = makeOverlay();
+      const box = makeBox();
+      box.appendChild(makeTitle('貼上先前匯出的數據'));
+      const ta = makeTextarea('', false);
+      ta.placeholder = '在此貼上 JSON 數據…';
+      const btnRow = makeRow();
+      const cancelBtn = makeBtn('取消', '#f0f0f0', '#555');
+      cancelBtn.onclick = () => document.body.removeChild(overlay);
+      const confirmBtn = makeBtn('確認匯入', '#f0f4f1', '#2d5a3d');
+      confirmBtn.style.fontWeight = '700';
+      confirmBtn.onclick = () => {
+        const txt = ta.value.trim();
+        if (!txt) return;
+        try {
+          const parsed = JSON.parse(txt);
+          if (!parsed.state || !Array.isArray(parsed.state.days)) {
+            alert('❌ 數據結構不符，請確認是從本應用匯出的數據'); return;
+          }
+          localStorage.setItem(STORAGE_KEY, txt);
+          document.body.removeChild(overlay);
+          alert('✅ 匯入成功，頁面即將刷新');
+          location.reload();
+        } catch {
+          alert('❌ JSON 格式錯誤，請貼上完整數據');
+        }
+      };
+      btnRow.appendChild(cancelBtn);
+      btnRow.appendChild(confirmBtn);
+      box.appendChild(ta);
+      box.appendChild(btnRow);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      ta.focus();
+    }
+
+    // 共用 DOM 輔助
+    function makeOverlay() {
+      const el = document.createElement('div');
+      el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      return el;
+    }
+    function makeBox() {
+      const el = document.createElement('div');
+      el.style.cssText = 'background:#fff;border-radius:18px;padding:22px;width:min(92vw,520px);display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 48px rgba(0,0,0,0.18);';
+      return el;
+    }
+    function makeTitle(text) {
+      const el = document.createElement('div');
+      el.textContent = text;
+      el.style.cssText = 'font-size:15px;font-weight:700;color:#2F3E49;';
+      return el;
+    }
+    function makeTextarea(value, readOnly) {
+      const el = document.createElement('textarea');
+      el.value = value;
+      el.readOnly = readOnly;
+      el.style.cssText = 'width:100%;height:190px;resize:none;border:1px solid #BFD8E6;border-radius:10px;padding:10px;font-size:12px;font-family:monospace;box-sizing:border-box;outline:none;';
+      return el;
+    }
+    function makeRow() {
+      const el = document.createElement('div');
+      el.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;';
+      return el;
+    }
+    function makeBtn(label, bg, color) {
+      const el = document.createElement('button');
+      el.textContent = label;
+      el.style.cssText = `padding:7px 18px;border:none;border-radius:10px;background:${bg};color:${color};cursor:pointer;font-size:13px;`;
+      return el;
+    }
+
+    // 4. 右上角按鈕（絕對定位，不改動任何原有布局）
+    window.addEventListener('DOMContentLoaded', () => {
+      const btnWrap = document.createElement('div');
+      btnWrap.style.position = 'absolute';
+      btnWrap.style.top = '24px';
+      btnWrap.style.right = '24px';
+      btnWrap.style.zIndex = '999';
+      btnWrap.style.display = 'flex';
+      btnWrap.style.gap = '10px';
+
+      const btnStyle = {
+        padding: '7px 14px',
+        borderRadius: '12px',
+        border: 'none',
+        fontSize: '13px',
+        fontWeight: '500',
+        cursor: 'pointer',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+      };
+
+      const btnExport = document.createElement('button');
+      btnExport.innerText = '📤 匯出';
+      Object.assign(btnExport.style, btnStyle, {
+        background: '#eef5f9',
+        color: '#2c5282'
+      });
+      btnExport.onclick = exportCurrentData;
+
+      const btnImport = document.createElement('button');
+      btnImport.innerText = '📥 匯入';
+      Object.assign(btnImport.style, btnStyle, {
+        background: '#f0f4f1',
+        color: '#2d5a3d'
+      });
+      btnImport.onclick = importToCurrentDevice;
+
+      btnWrap.appendChild(btnExport);
+      btnWrap.appendChild(btnImport);
+      document.body.appendChild(btnWrap);
+    });
+    </script>
+  </body>
+</html>

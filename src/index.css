@@ -230,3 +230,18 @@
     @apply hidden;
   }
 }
+
+/* ============================================================
+   手機版：行程卡片對齊地圖左右邊距
+   ============================================================ */
+@media (max-width: 767px) {
+  .mobile-cards-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .day-column-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}

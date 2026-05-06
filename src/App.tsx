@@ -165,7 +165,7 @@ export default function App() {
             </div>
 
             {/* 行程卡片捲動區（可左右 + 上下捲動） */}
-            <div style={{ flex: 1, overflow: 'auto', padding: '2px 2px 6px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignContent: 'flex-start', alignItems: 'flex-start' }}>
+            <div className="mobile-cards-container" style={{ flex: 1, overflow: 'auto', padding: '2px 2px 6px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignContent: 'flex-start', alignItems: 'flex-start' }}>
               {days.map((day) => (
                 <DayColumn key={day.id} day={day} onEditItem={handleEditItem} />
               ))}
