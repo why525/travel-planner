@@ -92,7 +92,7 @@ export default function App() {
       const fromDayId = activeData.dayId
       const itemId    = activeData.itemId
 
-      if (over.id === 'pool' || overData?.type === 'pool') return moveItemToPool(fromDayId, itemId)
+      if (over.id === 'pool' || overData?.type === 'pool' || (typeof over.id === 'string' && over.id.startsWith('pool-'))) return moveItemToPool(fromDayId, itemId)
       if (overData?.type === 'day' && overData.dayId)       return fromDayId !== overData.dayId && moveItemBetweenDays(fromDayId, overData.dayId, itemId)
 
       if (overData?.type === 'day-item' && overData.dayId) {

@@ -84,7 +84,7 @@ export const useTravelStore = create<TravelStore>()(
           const attraction = state.attractionPool.find((a) => a.id === attractionId)
           if (!attraction) return state
           const newPool = state.attractionPool.filter((a) => a.id !== attractionId)
-          const newItem: ItineraryItem = { id: genId(), name: attraction.name, time: '09:00', notes: '', link: '', lat: attraction.lat, lng: attraction.lng, address: attraction.address, category: attraction.category || 'scenic' }
+          const newItem: ItineraryItem = { id: genId(), name: attraction.name, time: '09:00', notes: attraction.notes ?? '', link: attraction.link ?? '', lat: attraction.lat, lng: attraction.lng, address: attraction.address, category: attraction.category || 'scenic' }
           const newDays = state.days.map((day) => day.id !== dayId ? day : { ...day, items: sortByTime(insertIndex !== undefined ? (() => { const list = [...day.items]; list.splice(insertIndex, 0, newItem); return list })() : [...day.items, newItem]) })
           return { attractionPool: newPool, days: newDays }
         }),
@@ -93,7 +93,7 @@ export const useTravelStore = create<TravelStore>()(
           const day = state.days.find((d) => d.id === dayId)
           const item = day?.items.find((i) => i.id === itemId)
           if (!item) return state
-          const newAttraction: Attraction = { id: genId(), name: item.name, lat: item.lat, lng: item.lng, address: item.address, category: item.category }
+          const newAttraction: Attraction = { id: genId(), name: item.name, lat: item.lat, lng: item.lng, address: item.address, category: item.category, notes: item.notes || undefined, link: item.link || undefined }
           return { days: state.days.map((d) => d.id !== dayId ? d : { ...d, items: d.items.filter((i) => i.id !== itemId) }), attractionPool: [...state.attractionPool, newAttraction] }
         }),
       moveItemBetweenDays: (fromDayId, toDayId, itemId, insertIndex) =>
