@@ -140,42 +140,9 @@
       return el;
     }
 
-    // 4. 頂部固定按鈕列（手機與桌面通用，不隨頁面滑動）
-    window.addEventListener('DOMContentLoaded', () => {
-      const btnWrap = document.createElement('div');
-      btnWrap.style.cssText = 'position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;gap:8px;z-index:999;pointer-events:none;';
-
-      const btnStyle = {
-        padding: '7px 14px',
-        borderRadius: '12px',
-        border: 'none',
-        fontSize: '13px',
-        fontWeight: '500',
-        cursor: 'pointer',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-        pointerEvents: 'auto'
-      };
-
-      const btnExport = document.createElement('button');
-      btnExport.innerText = '📤 匯出';
-      Object.assign(btnExport.style, btnStyle, {
-        background: '#eef5f9',
-        color: '#2c5282'
-      });
-      btnExport.onclick = exportCurrentData;
-
-      const btnImport = document.createElement('button');
-      btnImport.innerText = '📥 匯入';
-      Object.assign(btnImport.style, btnStyle, {
-        background: '#f0f4f1',
-        color: '#2d5a3d'
-      });
-      btnImport.onclick = importToCurrentDevice;
-
-      btnWrap.appendChild(btnExport);
-      btnWrap.appendChild(btnImport);
-      document.body.appendChild(btnWrap);
-    });
+    // 4. 將函式掛至 window，供 React 元件呼叫
+    window.exportCurrentData = exportCurrentData;
+    window.importToCurrentDevice = importToCurrentDevice;
     </script>
   </body>
 </html>

@@ -128,29 +128,38 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #FAF8F2 0%, #F5F2EA 100%)', overflow: 'hidden', padding: '72px 24px 32px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #FAF8F2 0%, #F5F2EA 100%)', overflow: 'hidden', padding: '0 0 32px' }}>
 
-      {/* ── 頂部標題列 ── */}
-      <header style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 26px', padding: '0 6px 0', color: '#2F3E49', flexShrink: 0 }}>
-        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-          <input
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            onBlur={() => {
-              const raw = (destination || '萬用旅行規劃').trim()
-              document.title = raw.replace(/(\S+)(\s+\1)+/g, '$1').trim()
-            }}
-            onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
-            style={{ fontFamily: "'SeparateSerif', 'Noto Serif SC', 'SimSun', '宋体', serif", fontSize: '34px', fontWeight: 800, letterSpacing: '0.02em', lineHeight: 1.3, color: '#2F3E49', border: 'none', outline: 'none', background: 'transparent', padding: '4px 0 6px', width: '100%' }}
-          />
-          <button onClick={() => setShowPoolOnMobile((v) => !v)} style={{ display: 'none', border: '1px solid #BFD8E6', background: '#fff', color: '#2F3E49', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }} className="max-md:block md:hidden">
-            {showPoolOnMobile ? '隱藏景點池' : '顯示景點池'}
-          </button>
-          <div style={{ width: '100%', height: '1px', marginTop: '2px', background: '#BFD8E6', borderRadius: '999px', opacity: 0.85 }} />
+      {/* ── 頂部標題列（sticky，隨容器固定在頂部）── */}
+      <header style={{ position: 'sticky', top: 0, zIndex: 100, width: '100%', background: 'linear-gradient(180deg, #FAF8F2 0%, #F5F2EAee 100%)', flexShrink: 0, padding: '12px 24px 0' }}>
+        <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+          {/* 按鈕列 */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '6px' }}>
+            <button onClick={() => (window as any).exportCurrentData?.()} style={{ padding: '7px 14px', borderRadius: '12px', border: 'none', fontSize: '13px', fontWeight: 500, cursor: 'pointer', background: '#eef5f9', color: '#2c5282', boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>📤 匯出</button>
+            <button onClick={() => (window as any).importToCurrentDevice?.()} style={{ padding: '7px 14px', borderRadius: '12px', border: 'none', fontSize: '13px', fontWeight: 500, cursor: 'pointer', background: '#f0f4f1', color: '#2d5a3d', boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>📥 匯入</button>
+          </div>
+          {/* 標題 */}
+          <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', padding: '0 6px', color: '#2F3E49' }}>
+            <input
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              onBlur={() => {
+                const raw = (destination || '萬用旅行規劃').trim()
+                document.title = raw.replace(/(\S+)(\s+\1)+/g, '$1').trim()
+              }}
+              onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
+              style={{ fontFamily: "'SeparateSerif', 'Noto Serif SC', 'SimSun', '宋体', serif", fontSize: '34px', fontWeight: 800, letterSpacing: '0.02em', lineHeight: 1.3, color: '#2F3E49', border: 'none', outline: 'none', background: 'transparent', padding: '4px 0 6px', width: '100%' }}
+            />
+            <button onClick={() => setShowPoolOnMobile((v) => !v)} style={{ display: 'none', border: '1px solid #BFD8E6', background: '#fff', color: '#2F3E49', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }} className="max-md:block md:hidden">
+              {showPoolOnMobile ? '隱藏景點池' : '顯示景點池'}
+            </button>
+            <div style={{ width: '100%', height: '1px', marginTop: '2px', background: '#BFD8E6', borderRadius: '999px', opacity: 0.85 }} />
+          </div>
         </div>
       </header>
 
       {/* ── 主體：左側景點池 + 右側（地圖上 / 行程卡片下）── */}
+      <div style={{ padding: '20px 24px 0', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <DndContext sensors={sensors} collisionDetection={collisionDetection} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0, gap: '18px' }}>
 
@@ -203,6 +212,7 @@ export default function App() {
         onSave={(dayId, itemId, updates) => updateItem(dayId, itemId, updates)}
         onClose={() => setEditingItem(null)}
       />
+      </div>
     </div>
   )
 }
