@@ -140,28 +140,10 @@
       return el;
     }
 
-    // 4. 右上角按鈕
+    // 4. 頂部固定按鈕列（手機與桌面通用，不隨頁面滑動）
     window.addEventListener('DOMContentLoaded', () => {
       const btnWrap = document.createElement('div');
-      btnWrap.style.position = 'fixed';
-      btnWrap.style.top = '20px';
-      btnWrap.style.right = '20px';
-      btnWrap.style.zIndex = '999';
-      btnWrap.style.display = 'flex';
-      btnWrap.style.gap = '8px';
-
-      // 手機版（寬度 < 768px）移到標題列下方，避免覆蓋標題
-      function updateBtnPosition() {
-        if (window.innerWidth < 768) {
-          btnWrap.style.top = '96px';
-          btnWrap.style.right = '16px';
-        } else {
-          btnWrap.style.top = '20px';
-          btnWrap.style.right = '20px';
-        }
-      }
-      updateBtnPosition();
-      window.addEventListener('resize', updateBtnPosition);
+      btnWrap.style.cssText = 'position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;gap:8px;z-index:999;pointer-events:none;';
 
       const btnStyle = {
         padding: '7px 14px',
@@ -170,7 +152,8 @@
         fontSize: '13px',
         fontWeight: '500',
         cursor: 'pointer',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+        boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+        pointerEvents: 'auto'
       };
 
       const btnExport = document.createElement('button');

@@ -128,11 +128,11 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #FAF8F2 0%, #F5F2EA 100%)', overflow: 'hidden', padding: '28px 24px 32px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #FAF8F2 0%, #F5F2EA 100%)', overflow: 'hidden', padding: '72px 24px 32px' }}>
 
       {/* ── 頂部標題列 ── */}
-      <header style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 26px', padding: '8px 6px 0', color: '#2F3E49', flexShrink: 0 }}>
-        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+      <header style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 26px', padding: '0 6px 0', color: '#2F3E49', flexShrink: 0 }}>
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
           <input
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
@@ -146,7 +146,7 @@ export default function App() {
           <button onClick={() => setShowPoolOnMobile((v) => !v)} style={{ display: 'none', border: '1px solid #BFD8E6', background: '#fff', color: '#2F3E49', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }} className="max-md:block md:hidden">
             {showPoolOnMobile ? '隱藏景點池' : '顯示景點池'}
           </button>
-          <div style={{ width: '100%', height: '1px', marginTop: '12px', background: '#BFD8E6', borderRadius: '999px', opacity: 0.85 }} />
+          <div style={{ width: '100%', height: '1px', marginTop: '2px', background: '#BFD8E6', borderRadius: '999px', opacity: 0.85 }} />
         </div>
       </header>
 
