@@ -173,8 +173,8 @@ export default function App() {
               </Suspense>
             </div>
 
-            {/* 行程卡片捲動區（可左右 + 上下捲動） */}
-            <div className="mobile-cards-container" style={{ flex: 1, overflow: 'auto', padding: '2px 2px 6px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignContent: 'flex-start', alignItems: 'flex-start' }}>
+            {/* 行程卡片捲動區（手機橫滑 / 桌面換行） */}
+            <div className="flex gap-4 p-0.5 pb-1.5 md:flex-wrap md:overflow-auto md:content-start md:items-start overflow-x-auto overflow-y-hidden flex-nowrap items-start" style={{ flex: 1 }}>
               {days.map((day) => (
                 <DayColumn key={day.id} day={day} onEditItem={handleEditItem} />
               ))}
