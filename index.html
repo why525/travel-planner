@@ -140,15 +140,28 @@
       return el;
     }
 
-    // 4. 右上角按鈕（絕對定位，不改動任何原有布局）
+    // 4. 右上角按鈕
     window.addEventListener('DOMContentLoaded', () => {
       const btnWrap = document.createElement('div');
-      btnWrap.style.position = 'absolute';
-      btnWrap.style.top = '24px';
-      btnWrap.style.right = '24px';
+      btnWrap.style.position = 'fixed';
+      btnWrap.style.top = '20px';
+      btnWrap.style.right = '20px';
       btnWrap.style.zIndex = '999';
       btnWrap.style.display = 'flex';
-      btnWrap.style.gap = '10px';
+      btnWrap.style.gap = '8px';
+
+      // 手機版（寬度 < 768px）移到標題列下方，避免覆蓋標題
+      function updateBtnPosition() {
+        if (window.innerWidth < 768) {
+          btnWrap.style.top = '96px';
+          btnWrap.style.right = '16px';
+        } else {
+          btnWrap.style.top = '20px';
+          btnWrap.style.right = '20px';
+        }
+      }
+      updateBtnPosition();
+      window.addEventListener('resize', updateBtnPosition);
 
       const btnStyle = {
         padding: '7px 14px',

@@ -141,7 +141,7 @@ export default function App() {
               document.title = raw.replace(/(\S+)(\s+\1)+/g, '$1').trim()
             }}
             onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
-            style={{ fontFamily: "'SeparateSerif', 'Noto Serif SC', 'SimSun', '宋体', serif", fontSize: '34px', fontWeight: 800, letterSpacing: '0.02em', lineHeight: 1.05, color: '#2F3E49', border: 'none', outline: 'none', background: 'transparent', padding: 0, width: '100%' }}
+            style={{ fontFamily: "'SeparateSerif', 'Noto Serif SC', 'SimSun', '宋体', serif", fontSize: '34px', fontWeight: 800, letterSpacing: '0.02em', lineHeight: 1.3, color: '#2F3E49', border: 'none', outline: 'none', background: 'transparent', padding: '4px 0 6px', width: '100%' }}
           />
           <button onClick={() => setShowPoolOnMobile((v) => !v)} style={{ display: 'none', border: '1px solid #BFD8E6', background: '#fff', color: '#2F3E49', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }} className="max-md:block md:hidden">
             {showPoolOnMobile ? '隱藏景點池' : '顯示景點池'}
