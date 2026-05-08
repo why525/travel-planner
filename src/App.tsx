@@ -2,7 +2,8 @@
 // 主應用程式
 // ============================================================
 import { useState, lazy, Suspense } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, closestCorners, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, closestCorners, pointerWithin, getFirstCollision, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
+import type { CollisionDetection } from '@dnd-kit/core'
 import { useTravelStore } from './store/useTravelStore'
 import { THEME } from './theme'
 import { ItineraryItem } from './types'
@@ -55,6 +56,14 @@ export default function App() {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor,   { activationConstraint: { delay: 200, tolerance: 8 } }),
   )
+
+  // 自定義碰撞檢測：優先用 pointerWithin（鼠標實際位置），找不到再 fallback closestCorners
+  // 修復：確保鼠標移入景點池區域時能正確命中 pool droppable，而非被 Day droppable 搶佔
+  const collisionDetection: CollisionDetection = (args) => {
+    const pointerCollisions = pointerWithin(args)
+    if (pointerCollisions.length > 0) return pointerCollisions
+    return getFirstCollision(closestCorners(args)) ? closestCorners(args) : []
+  }
 
   // 拖曳開始時記錄被拖的項目資訊，顯示預覽卡片
   function handleDragStart(event: DragStartEvent) {
@@ -142,7 +151,7 @@ export default function App() {
       </header>
 
       {/* ── 主體：左側景點池 + 右側（地圖上 / 行程卡片下）── */}
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={collisionDetection} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0, gap: '18px' }}>
 
           {/* 左側：景點池（手機隱藏，桌面顯示） */}
